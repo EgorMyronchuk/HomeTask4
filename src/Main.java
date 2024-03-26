@@ -3,25 +3,38 @@ import java.util.Objects;
 
 public class Main {
     public static void main(String[] args) {
-        Human father = new Human("Anton", "Kravech",30);
+        Human father = new Human("Anton", "Kravech", 30);
         Human father2 = new Human();
-        Human father3 = new Human("Egor" , "Tereshenko" , 26 , 145);
+        Human father3 = new Human("Egor", "Tereshenko", 26, 145);
 
-        Human mother = new Human("Inna", "Kravech",27);
+        Human mother = new Human("Inna", "Kravech", 27);
         Human mother2 = new Human();
-        Human mother3 = new Human("Anna" , "Tereshenko" , 24 , 145);
+        Human mother3 = new Human("Anna", "Tereshenko", 24, 145);
 
-        Human children3 = new Human("Tolik" , "Kravech" , 5 , 200 , new String[][]{{"Monday", "kindergarten"},{"Tuesday", "kindergarten"}});
+        Human children1 = new Human("Tolik", "Kravech", 5, 200, new String[][]{{"Monday", "kindergarten"}, {"Tuesday", "kindergarten"}});
+        Human children2 = new Human("Sergei", "Kravech", 3, 210);
+
+        Pet pet = new Pet("Buldog", "Sharik");
+        Pet pet2 = new Pet("Buldog", "Sharik", 4, 33, new String[]{"Eat", "bark", "play the ball"});
+        Family family1 = new Family(mother3, father2);
+        Family family = new Family(mother, father, pet2, new Human[]{children1});
 
 
-        Pet pet = new Pet("Buldog" , "Sharik");
-        Pet pet2 = new Pet("Buldog" , "Sharik",4,33,new String[]{"Eat","bark","play the ball"} );
-        Family family1 = new Family(mother3 , father2);
-        Family family = new Family(mother , father , pet2 , new Human[]{children3} );
+        System.out.println(family1.toString());
+        System.out.println(family.toString());
+        System.out.println(pet.toString());
+        System.out.println(mother.toString());
 
-          System.out.println(family1.toString());
-          System.out.println(family.toString());
-          System.out.println(pet.toString());
+        family.addChild(children2);
+        children2.family.pet.foul();
+        children2.family.pet.eat();
+        children2.family.pet.respond();
+
+        System.out.println(family);
+
+        family.deleteChild(1);
+
+        System.out.println(family);
     }
 
     public static class Pet {
@@ -40,7 +53,7 @@ public class Main {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Pet pet = (Pet) o;
-            return age == pet.age && trickLevel == pet.trickLevel && Objects.equals(species, pet.species) && Objects.equals(nickname, pet.nickname)  && Objects.equals(family, pet.family);
+            return age == pet.age && trickLevel == pet.trickLevel && Objects.equals(species, pet.species) && Objects.equals(nickname, pet.nickname) && Objects.equals(family, pet.family);
         }
 
         @Override
@@ -50,17 +63,19 @@ public class Main {
             return result;
         }
 
-        public Pet(String species , String nickname) {
+        public Pet(String species, String nickname) {
             this.species = species;
             this.nickname = nickname;
         }
-        public Pet(String species , String nickname , int age , int trickLevel , String[] habits ) {
+
+        public Pet(String species, String nickname, int age, int trickLevel, String[] habits) {
             this.species = species;
             this.nickname = nickname;
             this.age = age;
             this.trickLevel = trickLevel;
             this.habits = habits;
         }
+
         // Геттеры
         public String getSpecies() {
             return species;
@@ -90,9 +105,11 @@ public class Main {
         public void setSpecies(String species) {
             this.species = species;
         }
+
         public void setFamily(Family family) {
             this.family = family;
         }
+
         public void setNickname(String nickname) {
             this.nickname = nickname;
         }
@@ -128,7 +145,6 @@ public class Main {
                     ", age=" + age +
                     ", trickLevel=" + trickLevel +
                     ", habits=" + Arrays.toString(habits) +
-                    ", family=" + family +
                     '}';
         }
     }
@@ -156,26 +172,31 @@ public class Main {
             return result;
         }
 
-        public Human (){}
-        public Human (String name , String surname , int year){
-            this.name = name ;
+        public Human() {
+        }
+
+        public Human(String name, String surname, int year) {
+            this.name = name;
             this.surname = surname;
             this.year = year;
         }
-        public Human (String name , String surname , int year , int iq ){
-            this.name = name ;
+
+        public Human(String name, String surname, int year, int iq) {
+            this.name = name;
             this.surname = surname;
             this.year = year;
             this.iq = iq;
 
         }
-        public Human (String name , String surname , int year ,int iq, String[][] schedule){
-            this.name = name ;
+
+        public Human(String name, String surname, int year, int iq, String[][] schedule) {
+            this.name = name;
             this.surname = surname;
             this.year = year;
             this.iq = iq;
             this.schedule = schedule;
         }
+
         // Геттеры
         public String getName() {
             return name;
@@ -245,24 +266,26 @@ public class Main {
                     ", surname='" + surname + '\'' +
                     ", year=" + year +
                     ", iq=" + iq +
-                    ", family=" + family +
-                    ", schedule=" + Arrays.toString(schedule) +
+                    ", schedule=" + Arrays.deepToString(schedule) +
                     '}';
         }
     }
+
     public static class Family {
         Human mother;
         Human father;
         Human[] children;
         Pet pet;
-        public Family (Human mother , Human father){
+
+        public Family(Human mother, Human father) {
             this.mother = mother;
             this.father = father;
             mother.setFamily(this);
             father.setFamily(this);
             children = new Human[0];
         }
-        public Family (Human mother , Human father , Pet pet, Human[] children ){
+
+        public Family(Human mother, Human father, Pet pet, Human[] children) {
             this.mother = mother;
             this.father = father;
             mother.setFamily(this);
@@ -318,7 +341,8 @@ public class Main {
         public Pet getPet() {
             return pet;
         }
-      public void addChild(Human child) {
+
+        public void addChild(Human child) {
             Human[] updatedChildren = new Human[children.length + 1];
             for (int i = 0; i < children.length; i++) {
                 updatedChildren[i] = children[i];
@@ -344,17 +368,18 @@ public class Main {
             return true;
             // такаж проблема
         }
-        public int countFamily (){
+
+        public int countFamily() {
             return 2 + children.length;
         }
 
         @Override
         public String toString() {
             return "Family{" +
-                    "mother=" + mother +
-                    ", father=" + father +
-                    ", children=" + Arrays.toString(children) +
-                    ", pet=" + pet +
+                    "\nmother=" + mother +
+                    ",\nfather=" + father +
+                    ",\nchildren=" + Arrays.toString(children) +
+                    ",\npet=" + pet +
                     '}';
         }
     }
